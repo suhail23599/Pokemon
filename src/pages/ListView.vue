@@ -2,41 +2,30 @@
   <template v-if="isLoading">
     <LoaderView />
   </template>
+
   <div
     v-else
     class="list-wrapper"
   >
     <CardDetail
       v-for="(pokemon, index) in pokemonInfoList"
-      :key="pokemon.id"
       :id="getId(index + 1)"
+      :key="pokemon.id"
       :name="pokemon.name"
-    >
-    </CardDetail>
+    />
   </div>
-  <div v-if ="pokemonInfoList.length" class="pagination-wrapper">
+  <div
+    v-if="pokemonInfoList.length"
+    class="pagination-wrapper"
+  >
     <ThePagination
       :page-size="pageSize"
       :current-page="pageNo"
       :total-count="totalItems"
-      @onPageChange="onPageChange"
-    >
-    </ThePagination>
+      @on-page-change="onPageChange"
+    />
   </div>
 </template>
-
-<style lang="scss" scoped>
-.list-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.pagination-wrapper {
-  margin-top: 8px;
-  position: fixed;
-  bottom: 10px;
-}
-</style>
 
 <script>
 import { useRootStore } from'@/store/root-store'
@@ -100,3 +89,16 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.list-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pagination-wrapper {
+  margin-top: 8px;
+  position: fixed;
+  bottom: 10px;
+}
+</style>

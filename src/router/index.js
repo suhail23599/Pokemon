@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router"
 import ListView from '@/pages/ListView.vue'
 import DetailView from '@/pages/DetailView.vue'
-
 const routes = [
   {
     path: '/',

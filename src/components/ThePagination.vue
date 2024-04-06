@@ -13,10 +13,10 @@
     <ul class="pagination__list">
       <!-- Render pages -->
       <li
-        v-for="(page) in pagesInRange"
+        v-for="(page) in pagesInRange()"
+        :key="page.id"
         class="page-unit"
         :class="{'selected': currentPage+1 === page}"
-        :key="page.id"
         @click="onPageChange(page)"
       >
         <a
@@ -38,6 +38,71 @@
     </a>
   </div>
 </template>
+
+<script>
+import { computed, ref } from 'vue'
+export default {
+  name: 'ThePagination',
+  props: {
+    currentPage: {
+      type: Number,
+      require: true,
+      default: 0
+    },
+    pageSize: {
+      type: Number,
+      require: true,
+      default: 20
+    },
+    totalCount: {
+      type: Number,
+      require: true,
+      default: 0
+    }
+  },
+  emits: ['onPageChange'],
+  setup(props, context) {
+    const limit = 5
+    const left = ref(1)
+    const right = ref()
+    const totalPages = computed(() => {
+      return Math.ceil(props.totalCount / props.pageSize)
+    })
+    const gotoPrevPage = () => {
+      left.value = left.value - limit
+    }
+    const gotoNextPage = () => {
+      left.value = right.value + 1
+    }
+
+    const pagesInRange = () => {
+      const pages = []
+      for(let i=left.value; i<left.value + limit; ++ i) {
+        if (i<=totalPages.value) {
+          pages.push(i)
+          right.value = i;
+        } else {
+          break
+        }
+      }
+      return pages
+    }
+
+    const onPageChange = (page) => {
+      context.emit('onPageChange', page)
+    }
+    return {
+      gotoPrevPage,
+      gotoNextPage,
+      totalPages,
+      pagesInRange,
+      left,
+      right,
+      onPageChange
+    }
+  },
+}
+</script>
 
 <style scoped lang="scss">
 .pagination {
@@ -75,51 +140,3 @@
   }
 }
 </style>
-
-<script>
-import { computed, ref } from 'vue'
-export default {
-  name: 'ThePagination',
-  props: ['currentPage', 'pageSize', 'totalCount'],
-  setup(props, context) {
-    const limit = 5
-    const left = ref(1)
-    const right = ref()
-    const totalPages = computed(() => {
-      return Math.ceil(props.totalCount / props.pageSize)
-    })
-    const gotoPrevPage = () => {
-      left.value = left.value - limit
-    }
-    const gotoNextPage = () => {
-      left.value = right.value + 1
-    }
-
-    const pagesInRange = computed(() => {
-      const pages = []
-      for(let i=left.value; i<left.value + limit; ++ i) {
-        if (i<=totalPages.value) {
-          pages.push(i)
-          right.value = i;
-        } else {
-          break
-        }
-      }
-      return pages
-    })
-
-    const onPageChange = (page) => {
-      context.emit('onPageChange', page)
-    }
-    return {
-      gotoPrevPage,
-      gotoNextPage,
-      totalPages,
-      pagesInRange,
-      left,
-      right,
-      onPageChange
-    }
-  },
-}
-</script>

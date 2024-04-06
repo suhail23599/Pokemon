@@ -1,6 +1,9 @@
 <template>
   <section class="header">
-    <img src="@/assets/pokemon.svg" alt="pokemon">
+    <img
+      src="@/assets/pokemon.svg"
+      alt="pokemon"
+    >
   </section>
   <router-view />
 </template>
